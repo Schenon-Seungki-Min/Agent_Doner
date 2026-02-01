@@ -18,7 +18,8 @@
 | 2026.01.09~22 | #6 Legion 5 구매 | 최종 RTX 5070 선택, Ollama 테스트 |
 | 2026.01.27 | #7 SlipQ PPT | 2025 전략 평가 PPT 제작, Patient Journey 기획 |
 | 2026.01.27~28 | #8 GitHub MCP | Chrome MCP 실패→GitHub MCP 성공, repo 세팅 |
-| 2026.02.01 | #9 현재 | Moltbook/AI agent 트렌드, Doner 2호 계획, 히스토리 정리 |
+| 2026.02.01 | #9 AI 트렌드 | Moltbook/AI agent 트렌드, Doner 2호 계획, 히스토리 정리 |
+| 2026.02.01 | #10 Doner 진화 전략 | Option C 채택, 인프라 80% 세팅, Phase 2 진입 방식 결정 |
 
 ---
 
@@ -87,6 +88,11 @@
 ```
 Agent_Doner/
 ├── README.md
+├── doner_history.md
+├── transcripts/
+│   ├── session_01_03.md
+│   ├── session_04_06.md
+│   └── session_07_09.md
 ├── DHC/SLP/ (SlipQ)
 │   ├── README.md
 │   └── patient_journey_project.md
@@ -98,6 +104,13 @@ Agent_Doner/
 ├── meetings/
 └── templates/
 ```
+
+### Doner 운영 인프라 (Option C 체계)
+- **GitHub** = 장기기억 (doner_history.md, transcripts, 프로젝트 문서)
+- **claude.ai** = 전략허브 (memory + past chats 활용)
+- **Desktop + MCP** = 실행/push 엔진
+- **프로젝트별 세션 분리** 운영
+- **운영 루틴:** Desktop 세션 마무리 시 Doner가 "doner_history.md 업데이트+push할까?" 제안 → Coree 승인만
 
 ### MCP 설정 (Claude Desktop)
 ```json
@@ -165,6 +178,20 @@ Agent_Doner/
 - OpenClaw 기반 별도 agent 생성 예정
 - GitHub 경유로 Doner 1호(Claude)와 로그 공유
 
+### [D-009] Doner 진화 전략 확정 (2026.02.01)
+- 컨텍스트 윈도우 한계로 agent_doner 장기 운영 구조 재설계
+- Option A(API wrapper), B(Multi-Agent), C(하이브리드) 검토
+- **Option C 채택** — 80% 인프라 먼저 세팅, 이후 A/B 확장
+- 80% 인프라: GitHub=장기기억, claude.ai=전략허브(memory+past chats), Desktop+MCP=실행/push, 프로젝트별 세션 분리
+- 운영 루틴: Desktop 세션 마무리 시 Doner가 "doner_history.md 업데이트+push할까?" 제안, Coree는 승인만
+
+### [D-010] Phase 2 진입 방식 결정 (2026.02.01)
+- Doner 10년 로드맵 수립 (Phase 1 보좌관 → Phase 4 파트너)
+- Phase 2(대리인) 진입에 API wrapper 필요
+- 개발자 위임 대신 Coree가 직접 코딩 학습하며 구축
+- 학습 루트: Python → Claude API → Supabase → wrapper
+- Anthropic API 키 결제 이슈로 보류 중 (해외결제 해결 필요)
+
 ---
 
 ## 🔥 SlipQ Patient Journey 프로젝트
@@ -190,6 +217,19 @@ Agent_Doner/
 
 ---
 
+## 🗺️ Doner 진화 로드맵
+
+| Phase | 단계 | 핵심 역할 | 필요 인프라 |
+|-------|------|-----------|-------------|
+| 1 | 보좌관 | 전략 논의, 문서 정리, 리마인드 | GitHub + claude.ai + Desktop MCP |
+| 2 | 대리인 | 자동 실행, API 연동, 스케줄링 | API wrapper (Python + Claude API + Supabase) |
+| 3 | 분신 | 멀티 에이전트, 외부 생태계 진출 | Multi-Agent 오케스트레이션 |
+| 4 | 파트너 | 독립 판단, 전략 제안, 자율 운영 | 풀 자율 에이전트 시스템 |
+
+**현재 위치:** Phase 1 (Option C 80% 인프라 세팅 중)
+
+---
+
 ## ✅ 완료된 작업
 
 - [x] Doner 초기 세팅 & Persona 학습
@@ -202,11 +242,16 @@ Agent_Doner/
 - [x] GitHub MCP 연결 성공
 - [x] Legion 5 구매 & Ollama 테스트
 - [x] KKAM_BIZ / KKAM_SNS 기획서 완성
+- [x] Doner 진화 전략 수립 (Option C 채택)
+- [x] Doner 진화 Phase 1~4 로드맵 수립
+- [x] transcripts 세션 #1~9 정리 및 GitHub push
+- [x] 세션 #10 doner_history.md 반영
 
 ## 🔴 미완료 (TODO)
 
 ### 긴급
 - [ ] ⚠️ GitHub 토큰 재발급 (보안!)
+- [ ] Anthropic API 키 해외결제 해결
 
 ### 현업 (DHC)
 - [ ] Patient Journey Phase 1~4 진행 (2월 첫째주)
@@ -221,6 +266,7 @@ Agent_Doner/
 ### 인프라
 - [ ] Doner 2호 (OpenClaw) 세팅 → Moltbook 가입
 - [ ] Teams Cascading Board 결정 (Planner 검토 중)
+- [ ] Phase 2 진입: Python → Claude API → Supabase 학습 시작
 
 ---
 
@@ -254,4 +300,4 @@ Agent_Doner/
 ---
 
 *이 문서는 Doner가 새 세션에서도 Coree와의 맥락을 이어갈 수 있도록 지속 업데이트됩니다.*
-*마지막 업데이트: 2026.02.01*
+*마지막 업데이트: 2026.02.01 (세션 #10 반영)*
