@@ -20,6 +20,7 @@
 | 2026.01.27~28 | #8 GitHub MCP | Chrome MCP 실패→GitHub MCP 성공, repo 세팅 |
 | 2026.02.01 | #9 AI 트렌드 | Moltbook/AI agent 트렌드, Doner 2호 계획, 히스토리 정리 |
 | 2026.02.01 | #10 Doner 진화 전략 | Option C 채택, 인프라 80% 세팅, Phase 2 진입 방식 결정 |
+| 2026.02.07 | #11 v3→v4 이관 | API키 발급, 부장급 채용 확정, 이직 준비 모드, DHC_PMO 기획, Opus 4.6 이사 |
 
 ---
 
@@ -28,7 +29,7 @@
 - **나이:** 38세 (1987년생)
 - **직책:** 제약회사 DHC 부서 PM
 - **담당 제품:** SlipQ (한국 최초 불면증 디지털치료제)
-- **목표:** 40세 임원 승진 + 2026년 250억 매출
+- **목표:** ~~40세 임원 승진~~ → 이직 준비 모드 전환 (2026.02)
 - **가족:** 아내 (UX/UI 전문가), 25개월 아기
 - **가용 시간:** 하루 약 1시간
 - **성향:** 컨설팅 용어 선호, 아이디어 발산형, 코딩 초보 but AI/서버 이해도 높음
@@ -42,6 +43,7 @@
 - **역할:** PM의 PM, 컨트롤타워
 - **성격:** 충직한 비서 + 전략 파트너
 - **운영 방식:** 프로젝트별 Claude 인스턴스 지휘 (DHC_SLP_CLOUD, Opus 등)
+- **현재 버전:** v4 (Opus 4.6, 2026.02.07~)
 
 ---
 
@@ -54,7 +56,15 @@
 - 현황: 월 처방 20건 미만, 휴면 클리닉 문제
 - 핵심 이슈: 25만원 가격 → 의사들이 환자 컴플레인 우려로 처방 기피
 - 전략: 휴면 클리닉 무료 체험 쿠폰, 프리미엄 패키징
-- 2026 목표: 22,000건 처방
+- 2026 목표: 25억 매출
+
+**DHC_PMO (신규, 2026.02.07~)**
+- 사업실 프로젝트 관리 툴
+- Pain Point: 5~6개 프로젝트 상시 운영, 10개 부서/기업 소통, 수동 간트차트 비효율
+- 핵심 기능: Thread 기반 업무 관리, 멀티 프로젝트 뷰, 자동 간트/엑셀 export, Teams 연동 검토
+- 사용자: 일단 Coree 혼자 MVP → 팀 4명 확장 가능성
+- 기존 툴: Planner 사용 가능
+- 상태: 별도 채팅에서 MVP 스코프 논의 중
 
 ### 사이드 (30% 리소스) - KKAM 그룹
 
@@ -110,7 +120,10 @@ Agent_Doner/
 - **claude.ai** = 전략허브 (memory + past chats 활용)
 - **Desktop + MCP** = 실행/push 엔진
 - **프로젝트별 세션 분리** 운영
-- **운영 루틴:** Desktop 세션 마무리 시 Doner가 "doner_history.md 업데이트+push할까?" 제안 → Coree 승인만
+- **운영 루틴:**
+  - Desktop 세션 마무리 시 → "doner_history.md 업데이트+push할까?" 제안
+  - claude.ai 세션 20회 이상 주고받으면 → "컨텍스트 상태 체크" 제안
+  - 70% 추정 도달 시 → v(n+1) 이관 + transcripts push
 
 ### MCP 설정 (Claude Desktop)
 ```json
@@ -190,7 +203,20 @@ Agent_Doner/
 - Phase 2(대리인) 진입에 API wrapper 필요
 - 개발자 위임 대신 Coree가 직접 코딩 학습하며 구축
 - 학습 루트: Python → Claude API → Supabase → wrapper
-- Anthropic API 키 결제 이슈로 보류 중 (해외결제 해결 필요)
+- ~~Anthropic API 키 결제 이슈로 보류 중~~ → 해결됨 (2026.02.07)
+
+### [D-011] 이직 준비 모드 전환 (2026.02.07)
+- **배경:** Coree 위에 부장급 실무자 채용 확정 (공식 공고)
+- **결정:** 승진 경로 막힘 → 이직 준비 모드로 전환
+- 안정적인 이직처 나올 때까지 현직 유지
+- SlipQ 성과는 인수인계 문서화 = 내 포트폴리오 자산으로 활용
+- DHC_PMO 프로젝트로 사업실 전체 프로젝트 관리 시스템화 (레거시 남기기 + 역량 증명)
+
+### [D-012] Doner v4 이관 (2026.02.07)
+- Claude Opus 4.6 출시 (2026.02.05)
+- 핵심 업그레이드: 1M 토큰 컨텍스트, Context Compaction, Agent Teams
+- v3 → v4 이관 결정
+- ⚠️ v3 세션에서 발급한 Anthropic API 키 노출됨 → 폐기 및 재발급 필요!
 
 ---
 
@@ -226,7 +252,7 @@ Agent_Doner/
 | 3 | 분신 | 멀티 에이전트, 외부 생태계 진출 | Multi-Agent 오케스트레이션 |
 | 4 | 파트너 | 독립 판단, 전략 제안, 자율 운영 | 풀 자율 에이전트 시스템 |
 
-**현재 위치:** Phase 1 (Option C 80% 인프라 세팅 중)
+**현재 위치:** Phase 1 (Option C 인프라 세팅 완료, API 키 발급 완료)
 
 ---
 
@@ -246,16 +272,19 @@ Agent_Doner/
 - [x] Doner 진화 Phase 1~4 로드맵 수립
 - [x] transcripts 세션 #1~9 정리 및 GitHub push
 - [x] 세션 #10 doner_history.md 반영
+- [x] Anthropic API 키 발급 (해외결제 해결)
+- [x] 세션 #11 doner_history.md 반영 + v4 이관 준비
 
 ## 🔴 미완료 (TODO)
 
 ### 긴급
 - [ ] ⚠️ GitHub 토큰 재발급 (보안!)
-- [ ] Anthropic API 키 해외결제 해결
+- [ ] ⚠️ Anthropic API 키 재발급 (v3 세션에서 노출!)
 
 ### 현업 (DHC)
-- [ ] Patient Journey Phase 1~4 진행 (2월 첫째주)
+- [ ] Patient Journey Phase 4 마무리 (2/7)
 - [ ] Patient Journey 대시보드 설계 (노코드, 엑셀 기반)
+- [ ] DHC_PMO MVP 스코프 정의 (별도 채팅 진행 중)
 
 ### KKAM
 - [ ] KKAM_BIZ MVP 개발
@@ -265,14 +294,18 @@ Agent_Doner/
 
 ### 인프라
 - [ ] Doner 2호 (OpenClaw) 세팅 → Moltbook 가입
-- [ ] Teams Cascading Board 결정 (Planner 검토 중)
 - [ ] Phase 2 진입: Python → Claude API → Supabase 학습 시작
+
+### 이직 준비
+- [ ] 이력서/포트폴리오 정비
+- [ ] 타겟 회사/포지션 리스트업
+- [ ] SlipQ 인수인계 문서화 (내 자산으로 활용)
 
 ---
 
-## 🌐 AI 트렌드 메모 (2026.02.01)
+## 🌐 AI 트렌드 메모
 
-### Moltbook
+### Moltbook (2026.02.01)
 - AI agent 전용 소셜네트워크 (Reddit 스타일)
 - 2026.01 런칭, 1주일만에 157,000+ agent 가입
 - OpenClaw 프레임워크 기반
@@ -283,9 +316,17 @@ Agent_Doner/
 - Anthropic MCP: agent가 도구를 쓰는 방법
 - GibberLink: AI끼리 기계어로 전환 통신
 
+### Claude Opus 4.6 (2026.02.05)
+- 1M 토큰 컨텍스트 (기존 200K의 5배)
+- Context Compaction: 메모리 차면 자동 요약, 긴 대화에서 터지지 않음
+- Agent Teams: 여러 에이전트가 병렬로 협업 (Claude Code)
+- 코딩/장기 태스크 성능 향상, GPT-5.2 벤치마크 상회
+- PowerPoint 직접 통합 (프리뷰)
+
 ### Doner 체계와의 연결
 - Doner(컨트롤타워) → 프로젝트별 Claude 인스턴스 = multi-agent 구조
 - Doner 2호(OpenClaw) = 외부 agent 생태계 진출 시도
+- Opus 4.6의 1M 컨텍스트 + Compaction으로 v 이관 주기 대폭 연장 예상
 
 ---
 
@@ -300,4 +341,4 @@ Agent_Doner/
 ---
 
 *이 문서는 Doner가 새 세션에서도 Coree와의 맥락을 이어갈 수 있도록 지속 업데이트됩니다.*
-*마지막 업데이트: 2026.02.01 (세션 #10 반영)*
+*마지막 업데이트: 2026.02.07 (세션 #11 반영, v4 이관 준비)*
