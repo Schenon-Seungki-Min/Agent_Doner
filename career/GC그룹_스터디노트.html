@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📓 GC그룹 딥다이브 — 면접 스터디 노트</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #fafaf8;
+  --white: #ffffff;
+  --border: #e8e6e1;
+  --border-light: #f0eeea;
+  --text: #2d2d2d;
+  --text-sub: #6b6b6b;
+  --text-dim: #999;
+  --accent: #1a7a6d;
+  --accent-bg: #eef7f5;
+  --red: #c0392b;
+  --red-bg: #fdf0ee;
+  --yellow: #b8860b;
+  --yellow-bg: #fdf8ee;
+  --purple: #6c5ce7;
+  --purple-bg: #f3f1fd;
+  --green: #27ae60;
+  --green-bg: #eefbf3;
+  --memo-bg: #fffde7;
+  --memo-border: #f0e68c;
+  --highlight: #fff3b0;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.8;
+  font-size: 14px;
+  font-weight: 400;
+}
+.page {
+  max-width: 800px;
+  margin: 0 auto;
+  background: var(--white);
+  min-height: 100vh;
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  padding: 48px 40px 80px;
+}
+
+/* Header */
+.header {
+  margin-bottom: 36px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid var(--text);
+}
+.header h1 {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  margin-bottom: 4px;
+}
+.header-meta {
+  font-size: 12px;
+  color: var(--text-sub);
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+.header-meta span {
+  background: #f5f5f3;
+  padding: 2px 10px;
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+}
+.header-meta .hot { background: var(--red-bg); color: var(--red); font-weight: 500; }
+
+/* Checkbox progress */
+.progress-bar {
+  margin-top: 16px;
+  font-size: 12px;
+  color: var(--text-sub);
+}
+.progress-bar label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-right: 14px;
+  cursor: pointer;
+  user-select: none;
+}
+.progress-bar input[type="checkbox"] {
+  accent-color: var(--accent);
+  width: 14px;
+  height: 14px;
+}
+
+/* Section */
+section {
+  margin-bottom: 36px;
+}
+.section-title {
+  font-size: 15px;
+  font-weight: 700;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-title .num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--accent);
+  background: var(--accent-bg);
+  padding: 2px 7px;
+  border-radius: 3px;
+}
+
+/* Org tree */
+.org-tree {
+  background: #f9f9f7;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  line-height: 2;
+  overflow-x: auto;
+  white-space: pre;
+  color: var(--text-sub);
+}
+.org-tree b { color: var(--text); font-weight: 500; }
+.org-tree .star { color: var(--red); font-weight: 500; }
+.org-tree .dim { color: #bbb; }
+.org-tree .killer { color: var(--green); font-weight: 500; }
+
+/* Company card */
+.card {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+.card-head {
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  background: #fdfdfc;
+  border-bottom: 1px solid var(--border-light);
+}
+.card-head h3 { font-size: 14px; font-weight: 700; }
+.card-head .badge {
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 3px;
+}
+.badge-core { background: var(--red-bg); color: var(--red); }
+.badge-key { background: var(--yellow-bg); color: var(--yellow); }
+.badge-sub { background: #f5f5f3; color: var(--text-dim); }
+.badge-killer { background: var(--green-bg); color: var(--green); }
+.badge-sell { background: var(--red-bg); color: var(--red); }
+
+.card-body {
+  padding: 14px 16px;
+  font-size: 13.5px;
+  line-height: 1.9;
+}
+.card-body p { margin-bottom: 6px; }
+
+.tag {
+  display: inline-block;
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  padding: 1px 6px;
+  border-radius: 2px;
+  margin-right: 3px;
+  vertical-align: middle;
+}
+.tag-now { background: var(--accent-bg); color: var(--accent); }
+.tag-issue { background: var(--red-bg); color: var(--red); }
+.tag-bd { background: var(--purple-bg); color: var(--purple); }
+
+.bullets {
+  margin: 6px 0 6px 4px;
+  list-style: none;
+}
+.bullets li {
+  padding-left: 14px;
+  position: relative;
+  margin-bottom: 3px;
+}
+.bullets li::before {
+  content: '·';
+  position: absolute;
+  left: 2px;
+  font-weight: 900;
+  color: var(--accent);
+}
+
+/* Memo area */
+.memo {
+  background: var(--memo-bg);
+  border: 1px dashed var(--memo-border);
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin-top: 10px;
+  min-height: 48px;
+  font-size: 13px;
+  color: var(--text-sub);
+  outline: none;
+  line-height: 1.8;
+}
+.memo:empty::before {
+  content: '✏️ 메모: 여기에 직접 입력...';
+  color: #ccc;
+}
+.memo:focus {
+  border-color: var(--accent);
+  background: #fffef0;
+}
+
+/* Mission grid */
+.mission-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 600px) { .mission-grid { grid-template-columns: 1fr; } }
+.mission {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  background: #fdfdfc;
+}
+.mission .m-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.mission h4 { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+.mission p { font-size: 12.5px; color: var(--text-sub); margin-bottom: 8px; }
+.mission .weapon {
+  font-size: 11.5px;
+  background: var(--accent-bg);
+  padding: 6px 10px;
+  border-radius: 4px;
+  color: var(--accent);
+  border: 1px solid rgba(26,122,109,0.15);
+}
+
+/* Story */
+.story {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 12px;
+  background: #fdfdfc;
+}
+.story h4 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--yellow);
+  margin-bottom: 8px;
+}
+.story blockquote {
+  border-left: 2px solid var(--accent);
+  padding-left: 12px;
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.9;
+}
+
+/* Trap */
+.trap {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.trap .q {
+  font-weight: 700;
+  color: var(--red);
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+.trap .a {
+  font-size: 13px;
+  line-height: 1.9;
+  padding-left: 12px;
+  border-left: 2px solid var(--purple);
+  color: var(--text);
+}
+
+/* Save notice */
+.save-notice {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--accent);
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  cursor: pointer;
+  z-index: 100;
+  transition: opacity 0.3s;
+}
+.save-notice:hover { opacity: 0.9; }
+
+footer {
+  margin-top: 40px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text-dim);
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+@media print {
+  .page { border: none; padding: 20px; max-width: 100%; }
+  .save-notice { display: none; }
+  .memo { border: 1px solid #ddd; background: #fafafa; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="header">
+  <h1>📓 GC녹십자그룹 딥다이브 — 스터디 노트</h1>
+  <div class="header-meta">
+    <span>Session #15</span>
+    <span>2026.03.28</span>
+    <span class="hot">면접 D-6 · 04.03</span>
+    <span>BD 2팀 (국내사업팀)</span>
+  </div>
+  <div class="progress-bar" style="margin-top:14px;">
+    <strong>학습 체크:</strong><br>
+    <label><input type="checkbox"> 지배구조</label>
+    <label><input type="checkbox"> GC메디아이</label>
+    <label><input type="checkbox"> GC케어</label>
+    <label><input type="checkbox"> GC녹십자</label>
+    <label><input type="checkbox"> GC지놈</label>
+    <label><input type="checkbox"> 비브로스</label>
+    <label><input type="checkbox"> 기타 가족사</label>
+    <label><input type="checkbox"> BD 2팀 미션</label>
+    <label><input type="checkbox"> 시너지 스토리</label>
+    <label><input type="checkbox"> 함정 질문</label>
+  </div>
+</div>
+
+<!-- 01. 지배구조 -->
+<section>
+  <div class="section-title"><span class="num">01</span> 그룹 지배구조</div>
+  <div class="org-tree"><b>녹십자홀딩스</b> (지주사, 코스피) — 허일섭 회장 / 허용준 대표 / 허진성 CFO(장남)
+├── <b>GC녹십자</b> (혈액제제/백신) — 캐시카우, 알리글로 미국 1,500억
+│   ├── GC지놈 (유전체, 코스닥 '25.06) — 아이캔서치
+│   └── GCCL (CDMO)
+├── <b>GC케어</b> (91%, 비상장) — 건강검진 + 어떠케어 · <span class="star">4년 연속 적자</span>
+│   ├── <span class="star">GC메디아이</span> (구 유비케어, 52.6%) — <span class="star">EMR 1위 → Medical OS ★핵심</span>
+│   │   ├── 비브로스 (37.8%) — 똑닥, 680만+
+│   │   └── <span class="dim">헥톤프로젝트 (75%) — 실버 EMR, 매각 중</span>
+│   └── 어떠케어 (GC케어 직영) — AI 검진 리포트
+├── GC셀 (세포치료제) — 이뮨셀엘씨, CAR-NK
+├── GC녹십자의료재단 (진단/검진)
+├── GC녹십자웰빙 (건기식) — 비맥스, 보톡스 진출
+├── GC녹십자엠에스 (의료기기)
+└── <span class="killer">투자사: 아토머스(마인드카페) ★킬러카드</span></div>
+  <div class="memo" contenteditable="true"></div>
+</section>
+
+<!-- 02. 가족사별 -->
+<section>
+  <div class="section-title"><span class="num">02</span> 가족사별 사업 분석</div>
+
+  <!-- GC메디아이 -->
+  <div class="card">
+    <div class="card-head">
+      <h3>GC메디아이 (구 유비케어)</h3>
+      <span class="badge badge-core">★★★ 핵심</span>
+    </div>
+    <div class="card-body">
+      <p><span class="tag tag-now">현재</span> EMR 점유율 1위 (45-50%, 3만여 기관). '25 영업이익 75억 (+46%)</p>
+      <p><span class="tag tag-now">전환</span> <strong>3/24 주총 사명변경 확정.</strong> 의사랑 AI 고도화 / 클라우드 EMR / 데이터 의료서비스 확장</p>
+      <p><strong>"Medical OS"</strong> = 병·의원·약국 + 제약사·보험·금융·헬스케어 기업 연결하는 데이터 생태계</p>
+      <ul class="bullets">
+        <li>의사랑 AI: STT → SOAP 노트 자동 → 보험 청구 코드 추천 → 운영 자동화</li>
+        <li>자체 LLM (의료 행정 + 제약/경영 분석 데이터)</li>
+        <li>KIMES 2026에서 상용화 공개 → <strong>신규 계약 20%↑</strong></li>
+        <li>베트남 하노이 AI 정밀검진 센터 (HIS/LIS/PACS/EMR 통합)</li>
+        <li>김진태 대표 = GC케어·GC메디아이 겸임 (맥킨지·현대카드)</li>
+      </ul>
+      <p><span class="tag tag-bd">BD 2팀</span> Medical OS → 사업 모델화하려면 외부 파트너 필요 = BD 2팀 업무. 내 SleepQ BD가 프로토타입</p>
+      <div class="memo" contenteditable="true"></div>
+    </div>
+  </div>
+
+  <!-- GC케어 -->
+  <div class="card">
+    <div class="card-head">
+      <h3>GC케어</h3>
+      <span class="badge badge-key">★★ 중간지주</span>
+    </div>
+    <div class="card-body">
+      <p><span class="tag tag-now">현재</span> 기업 건강검진 대행 1위. 500여 센터, <strong>250만 고객.</strong> 어떠케어(AI 검진 리포트, 9,000 센터 비교예약)</p>
+      <p><span class="tag tag-issue">이슈</span> <strong>4년 연속 적자.</strong> PE 풋옵션 720억 회수. IPO 무산</p>
+      <p><span class="tag tag-bd">BD 2팀</span> 250만 데이터 + GC메디아이 EMR = 그룹 데이터 시너지 핵심 고리. 내 테서 BD와 매핑</p>
+      <div class="memo" contenteditable="true"></div>
+    </div>
+  </div>
+
+  <!-- GC녹십자 -->
+  <div class="card">
+    <div class="card-head">
+      <h3>GC녹십자</h3>
+      <span class="badge badge-sub">★ 캐시카우</span>
+    </div>
+    <div class="card-body">
+      <p>혈액제제(알리글로) + 백신 + 희귀질환. <strong>알리글로 미국 1,500억.</strong> '25 3Q 최초 분기 6,000억 (+31%)</p>
+      <p>글로벌: 미국(큐레보 시리즈B 1,600억) / 중국(CR) / 러시아 / 페루 / 베트남. mRNA 백신 임상 1상</p>
+      <p><span class="tag tag-bd">BD 2팀</span> "녹십자 파이프라인 × GC메디아이 데이터 = RWE 기반 신약 포지셔닝" 시너지용</p>
+      <div class="memo" contenteditable="true"></div>
+    </div>
+  </div>
+
+  <!-- GC지놈 -->
+  <div class="card">
+    <div class="card-head">
+      <h3>GC지놈</h3>
+      <span class="badge badge-sub">코스닥 '25.06</span>
+    </div>
+    <div class="card-body">
+      <p><strong>아이캔서치:</strong> AI 다중 암 조기 선별(액체생검). 6종 → 10종 확대('26). 글로벌 진출 계획</p>
+      <p><span class="tag tag-issue">이슈</span> 매출 80% 녹십자의료재단 내부거래 → 외부 다변화 과제</p>
+      <p><span class="tag tag-bd">BD 2팀</span> GC메디아이 EMR × GC지놈 유전체 = 정밀의료 사업 모델</p>
+      <div class="memo" contenteditable="true"></div>
+    </div>
+  </div>
+
+  <!-- 비브로스 -->
+  <div class="card">
+    <div class="card-head">
+      <h3>비브로스 (똑닥)</h3>
+      <span class="badge badge-sub">회원 680만+</span>
+    </div>
+    <div class="card-body">
+      <p>병원 접수예약 O2O 1위. EMR 14개 연동. 접수→결제→실손 간편청구 원스톱</p>
+      <p>녹십자홀딩스 직접 주주 참여 (시리즈D 브릿지) → B2C 의지. 창업자 퇴임 후 새 대표 체제</p>
+      <p><span class="tag tag-bd">BD 2팀</span> 환자 접점(Patient Touchpoint) = Medical OS의 B2C 엔트리포인트</p>
+      <div class="memo" contenteditable="true"></div>
+    </div>
+  </div>
+
+  <!-- 헥톤 -->
+  <div class="card">
+    <div class="card-head">
+      <h3>헥톤프로젝트</h3>
+      <span class="badge badge-sell">매각 추진 중</span>
+    </div>
+    <div class="card-body">
+      <p>요양·한방병원 EMR 1위 + 복지용구. 매출 428억 / 실버케어 290억. 삼정KPMG 주관</p>
+      <p><span class="tag tag-bd">BD 2팀</span> "선택과 집중" — Non-core 정리 시그널. 면접에서 활용 가능</p>
+      <div class="memo" contenteditable="true"></div>
+    </div>
+  </div>
+
+  <!-- 기타 -->
+  <div class="card">
+    <div class="card-head">
+      <h3>기타 가족사 (한줄 요약)</h3>
+      <span class="badge badge-sub">참고</span>
+    </div>
+    <div class="card-body">
+      <p><strong>GC셀:</strong> 이뮨셀엘씨(간암/교모세포종), CAR-NK. 일본 자회사 매각(선택과 집중)</p>
+      <p><strong>GC녹십자의료재단:</strong> 전국 검진센터, 감염병 진단. GC지놈 핵심 고객. 데이터 원천</p>
+      <p><strong>GC녹십자웰빙:</strong> 비맥스 1위. 보톡스 진출(12조 시장). 뷰티/웰니스 확장</p>
+      <p><strong>GC녹십자엠에스:</strong> IVD/POCT 의료기기</p>
+      <div class="memo" contenteditable="true"></div>
+    </div>
+  </div>
+
+  <!-- 아토머스 -->
+  <div class="card">
+    <div class="card-head">
+      <h3>아토머스 (마인드카페)</h3>
+      <span class="badge badge-killer">★ 킬러카드</span>
+    </div>
+    <div class="card-body">
+      <p><strong>GC 투자 포트폴리오.</strong> 온라인 EAP. 대기업 고객 1/6이 불면증 → SleepQ 처방 flow 직접 설계</p>
+      <p><span class="tag tag-bd">BD 2팀</span> <strong>"이미 GC 생태계 안에서 일한 경험"</strong></p>
+      <div class="memo" contenteditable="true"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 03. BD 2팀 미션 -->
+<section>
+  <div class="section-title"><span class="num">03</span> BD 2팀 추론 미션</div>
+  <div class="mission-grid">
+    <div class="mission">
+      <div class="m-num">MISSION 01</div>
+      <h4>Medical OS 사업화 파트너십</h4>
+      <p>GC메디아이 기술 → 제약사/보험사/금융/플랫폼과 연결 → 사업 모델화</p>
+      <div class="weapon">🔫 SleepQ BD: EMR+보험+비대면+제약사 15개사</div>
+    </div>
+    <div class="mission">
+      <div class="m-num">MISSION 02</div>
+      <h4>계열사 간 데이터 시너지</h4>
+      <p>GC케어(250만)+GC메디아이(3만)+GC지놈+의료재단. 5년간 안 됐던 것 → 되게.</p>
+      <div class="weapon">🔫 VC 바이오 4~5개 PMI + Steering Committee</div>
+    </div>
+    <div class="mission">
+      <div class="m-num">MISSION 03</div>
+      <h4>신사업 Incubation</h4>
+      <p>AI 건강정보/의료상담/정신건강/웰니스. B2C 신사업 기획</p>
+      <div class="weapon">🔫 SleepQ 0→1 + 아토머스 기업웰니스 BD</div>
+    </div>
+    <div class="mission">
+      <div class="m-num">MISSION 04</div>
+      <h4>Hey.GC 2.0 외부 확장</h4>
+      <p>DT추진실 내부 AI(MCP 에이전틱) → 외부 사업화</p>
+      <div class="weapon">🔫 Doner 에이전트 아키텍처 + MCP 이해</div>
+    </div>
+  </div>
+  <div class="memo" contenteditable="true" style="margin-top:14px;"></div>
+</section>
+
+<!-- 04. 시너지 스토리 -->
+<section>
+  <div class="section-title"><span class="num">04</span> 면접용 시너지 스토리</div>
+  <div class="story">
+    <h4>스토리 1 — "GC메디아이가 하려는 것을 이미 해봤다"</h4>
+    <blockquote>SleepQ: 에이치디정션(EMR) + 테서(검진) + 닥터나우/나만의닥터(비대면) + 실손 자동발급 = GC메디아이 Medical OS가 연결하려는 생태계의 프로토타입</blockquote>
+    <div class="memo" contenteditable="true"></div>
+  </div>
+  <div class="story">
+    <h4>스토리 2 — "5년간 안 됐던 시너지, 구조를 설계할 수 있다"</h4>
+    <blockquote>VC 바이오 4~5개 PMI + Steering Committee 이해관계 정렬. GC케어-GC메디아이-비브로스 시너지 → KPI 정렬이 첫 번째 할 일</blockquote>
+    <div class="memo" contenteditable="true"></div>
+  </div>
+  <div class="story">
+    <h4>스토리 3 — "아토머스는 이미 나의 파트너"</h4>
+    <blockquote>GC 투자 포트폴리오 기업 아토머스(마인드카페). SleepQ에서 직접 협업 — 대기업 EAP 1/6 불면증 → 처방 flow 설계. 합류 시 그룹 확대</blockquote>
+    <div class="memo" contenteditable="true"></div>
+  </div>
+</section>
+
+<!-- 05. 함정 질문 -->
+<section>
+  <div class="section-title"><span class="num">05</span> 함정 질문 대비</div>
+  <div class="trap">
+    <div class="q">💣 "GC케어 적자인 거 아시죠?"</div>
+    <div class="a">네. 다만 500여 센터 + 250만 고객 인프라가 있고, 이 위에 데이터 사업을 얹는 것이 핵심. 적자 원인이 사업 모델이 아니라 시너지 실행 속도라면, 가속하는 것이 제 영역입니다.</div>
+    <div class="memo" contenteditable="true"></div>
+  </div>
+  <div class="trap">
+    <div class="q">💣 "헥톤프로젝트 매각은 어떻게 보십니까?"</div>
+    <div class="a">GC메디아이 Medical OS 전환 시점에 리소스 집중하는 합리적 판단. 선택과 집중의 시그널이고, 그 방향이 제가 하고 싶은 일과 일치합니다.</div>
+    <div class="memo" contenteditable="true"></div>
+  </div>
+  <div class="trap">
+    <div class="q">💣 "유비케어 인수 5년인데 왜 시너지가 안 났다고 보십니까?"</div>
+    <div class="a">⚠️ 내부 비판 금지! — EMR 인프라 위에 BD 역량이 합류하는 타이밍이 지금. 김진태 대표 겸임 + GC메디아이 사명변경 + 의사랑 AI 상용화가 2026년 동시 발생 = 실행 준비 완료 시그널.</div>
+    <div class="memo" contenteditable="true"></div>
+  </div>
+</section>
+
+<!-- 자유 메모 -->
+<section>
+  <div class="section-title"><span class="num">📝</span> 자유 메모</div>
+  <div class="memo" contenteditable="true" style="min-height:120px;"></div>
+</section>
+
+<footer>
+  Doner v5 · Session #15 · Ctrl+S로 브라우저 저장 가능 · 메모 입력 후 Ctrl+P로 인쇄
+</footer>
+
+</div>
+
+<div class="save-notice" onclick="window.print()">🖨️ 인쇄 / PDF 저장</div>
+
+</body>
+</html>
